@@ -7,5 +7,6 @@ const CHARACTERS = {
   itai:      { name: "איתי",     color: "#43a047", floor: "קומה 1", avatar: "א" },
   uri:       { name: "אורי",     color: "#8e24aa", floor: "קומה 4", avatar: "א" },
   valentina: { name: "ולנטינה", color: "#fb8c00", floor: "קומה 5", avatar: "ו" },
-  player:    { name: "אתה",      color: "#005c4b", avatar: "★" }
+  dani:      { name: "דני",      color: "#d32f2f", floor: "קומה 5", avatar: "ד" },
+  player:    { name: "יהודה",   color: "#005c4b", avatar: "★" }
 };
