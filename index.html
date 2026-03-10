@@ -589,7 +589,10 @@ body {
   display: flex; flex-direction: column; align-items: center; gap: 14px;
 }
 .ri-menu {
-  display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+  display: none; gap: 12px; flex-wrap: wrap; justify-content: center;
+}
+.ri-menu.visible {
+  display: flex;
 }
 .ri-btn {
   font-family: 'Press Start 2P', monospace;
@@ -681,7 +684,7 @@ body {
 
 <!-- HEADER (WhatsApp style) -->
 <div id="header">
-  <div id="header-back">←</div>
+  <div id="header-back">→</div>
   <div id="header-avatar">🏠</div>
   <div id="header-info">
     <div id="header-title">ועד הבניין | רח' הפרחים 12</div>
@@ -729,7 +732,7 @@ body {
       <div id="choices-list"></div>
       <div id="fake-input-bar">
         <input id="fake-input-field" type="text" placeholder="הקלד הודעה..." readonly>
-        <div class="fake-send-btn" style="direction:ltr">➤</div>
+        <div class="fake-send-btn">◄</div>
       </div>
     </div>
   </div>
@@ -1295,9 +1298,15 @@ function retroExit(el) {
 buildEpisodeCards();
 renderSidebar();
 
-// Start music on first interaction with retro intro (browser autoplay policy)
+// First click on retro intro: start music + reveal menu (browser autoplay policy)
 document.getElementById('retro-intro').addEventListener('click', function() {
   if (_rMusicOn && !_rActx) _rStartMusic();
+  const menu = document.querySelector('.ri-menu');
+  const press = document.querySelector('.ri-press');
+  if (menu && !menu.classList.contains('visible')) {
+    menu.classList.add('visible');
+    if (press) press.style.display = 'none';
+  }
 }, { once: true });
 </script>
 </body>
