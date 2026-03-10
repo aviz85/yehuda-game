@@ -729,7 +729,7 @@ body {
       <div id="choices-list"></div>
       <div id="fake-input-bar">
         <input id="fake-input-field" type="text" placeholder="הקלד הודעה..." readonly>
-        <div class="fake-send-btn">➤</div>
+        <div class="fake-send-btn" style="direction:ltr">➤</div>
       </div>
     </div>
   </div>
@@ -1268,10 +1268,16 @@ function _retroHide() {
   setTimeout(() => el.style.display = 'none', 400);
 }
 
-function retroStart() { _retroHide(); startEpisode(1); }
+function _retroStopMusic() {
+  _rMusicOn = false;
+  if (_rTimer) clearTimeout(_rTimer);
+}
+
+function retroStart() { _retroHide(); setTimeout(_retroStopMusic, 1200); startEpisode(1); }
 
 function retroLevel() {
   _retroHide();
+  setTimeout(_retroStopMusic, 1200);
   const intro = document.getElementById('intro-screen');
   intro.style.display = 'flex';
   intro.style.animation = 'none';
