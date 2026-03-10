@@ -361,16 +361,28 @@ function initGame() {
     }
     
     function checkBonusCollisions() {
-        const soldierBoundingBox = new THREE.Box3().setFromObject(soldierGroup);
-        
+        // Use the center of the soldier group with a tight collision radius
+        // so the player's steering choice actually determines which bonus is collected
+        const groupCenter = new THREE.Vector3();
+        soldierGroup.getWorldPosition(groupCenter);
+
+        // Calculate the front z position of the group (soldiers are at negative z offsets)
+        const frontZ = groupCenter.z - 2.5;
+
+        const collisionRadiusX = 1.5; // Tight horizontal detection
+        const collisionRadiusZ = 2.0; // Forward detection range
+
         for (let i = bonuses.length - 1; i >= 0; i--) {
             const bonus = bonuses[i];
-            const bonusBoundingBox = new THREE.Box3().setFromObject(bonus);
-            
-            if (soldierBoundingBox.intersectsBox(bonusBoundingBox)) {
+            const bonusPos = bonus.position;
+
+            const dx = Math.abs(groupCenter.x - bonusPos.x);
+            const dz = Math.abs(frontZ - bonusPos.z);
+
+            if (dx < collisionRadiusX && dz < collisionRadiusZ) {
                 // Collect bonus
                 updateSoldierCount(bonus.userData.value);
-                
+
                 // Remove bonus
                 scene.remove(bonus);
                 bonuses.splice(i, 1);
