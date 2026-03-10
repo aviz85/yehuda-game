@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>הוועד - משחק הבניין</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -548,6 +549,86 @@ body {
 }
 #ep-select-btn:hover { background: #3a4f5c; transform: scale(1.04); }
 
+/* ─── RETRO INTRO ─── */
+#retro-intro {
+  position: fixed; inset: 0; z-index: 500;
+  background: #000;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end;
+  font-family: 'Press Start 2P', monospace;
+  overflow: hidden;
+  cursor: default;
+}
+.ri-bg {
+  position: absolute; inset: 0;
+  background: url('poster.jpg') center/cover no-repeat;
+}
+.ri-scanlines {
+  position: absolute; inset: 0; z-index: 3;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.13) 2px, rgba(0,0,0,0.13) 4px);
+  pointer-events: none;
+}
+.ri-vignette {
+  position: absolute; inset: 0; z-index: 2;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.75) 100%);
+  pointer-events: none;
+}
+.ri-corner {
+  position: absolute; width: 28px; height: 28px;
+  border-color: #00ffff; border-style: solid; z-index: 10;
+  box-shadow: 0 0 8px #00ffff;
+}
+.ri-corner.tl { top:14px; left:14px;  border-width: 3px 0 0 3px; }
+.ri-corner.tr { top:14px; right:14px; border-width: 3px 3px 0 0; }
+.ri-corner.bl { bottom:14px; left:14px;  border-width: 0 0 3px 3px; }
+.ri-corner.br { bottom:14px; right:14px; border-width: 0 3px 3px 0; }
+.ri-bottom {
+  position: relative; z-index: 10;
+  width: 100%; padding: 18px 24px 24px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.92) 30%);
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+}
+.ri-menu {
+  display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+}
+.ri-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(8px, 1.6vw, 12px);
+  color: #00ff41;
+  background: transparent;
+  border: 2px solid #00ff41;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-shadow: 0 0 6px #00ff41;
+  box-shadow: 0 0 8px rgba(0,255,65,0.4), inset 0 0 8px rgba(0,255,65,0.05);
+  transition: all 0.08s;
+  letter-spacing: 1px;
+  direction: rtl;
+}
+.ri-btn:hover {
+  background: #00ff41; color: #000;
+  text-shadow: none;
+  box-shadow: 0 0 20px #00ff41;
+  transform: scale(1.04);
+}
+.ri-btn.exit:hover { background: #ff4141; border-color: #ff4141; box-shadow: 0 0 20px #ff4141; }
+.ri-press {
+  font-size: clamp(7px, 1.2vw, 10px);
+  color: #ffffff; letter-spacing: 3px;
+  animation: ri-blink 1s step-end infinite;
+  text-shadow: 0 0 5px #fff;
+}
+.ri-music {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px; color: #8888ff;
+  background: none; border: 1px solid #8888ff;
+  padding: 3px 8px; cursor: pointer;
+  text-shadow: 0 0 4px #8888ff;
+  position: absolute; bottom: 16px; left: 20px; z-index: 10;
+}
+.ri-music:hover { color: #ffff00; border-color: #ffff00; text-shadow: 0 0 4px #ffff00; }
+@keyframes ri-blink { 0%,100%{opacity:1} 50%{opacity:0} }
+@keyframes ri-flicker { 0%,89%,100%{opacity:1} 90%{opacity:.7} 95%{opacity:1} 97%{opacity:.5} }
 /* ─── MOBILE ─── */
 @media (max-width: 580px) {
   #sidebar { display: none; }
@@ -556,8 +637,28 @@ body {
 </head>
 <body>
 
+<!-- RETRO INTRO SCREEN -->
+<div id="retro-intro">
+  <div class="ri-bg"></div>
+  <div class="ri-vignette"></div>
+  <div class="ri-scanlines"></div>
+  <div class="ri-corner tl"></div>
+  <div class="ri-corner tr"></div>
+  <div class="ri-corner bl"></div>
+  <div class="ri-corner br"></div>
+  <div class="ri-bottom">
+    <div class="ri-menu">
+      <button class="ri-btn" onclick="retroStart()">▶ התחל משחק</button>
+      <button class="ri-btn" onclick="retroLevel()">⬛ פתח שלב</button>
+      <button class="ri-btn exit" onclick="retroExit(this)">✕ יציאה</button>
+    </div>
+    <div class="ri-press">— PRESS START —</div>
+  </div>
+  <button class="ri-music" id="ri-music-btn" onclick="retroToggleMusic()">♫ מוזיקה: ON</button>
+</div>
+
 <!-- INTRO / EPISODE SELECT -->
-<div id="intro-screen">
+<div id="intro-screen" style="display:none">
   <div class="intro-logo">🏠</div>
   <div class="intro-title">הוועד</div>
   <div class="intro-subtitle">סימולטור קבוצת הווטסאפ של הבניין הישראלי</div>
@@ -1084,6 +1185,105 @@ function startEpisode(id) {
   setTimeout(() => { intro.style.display = 'none'; }, 600);
 
   loadEpisode(episode);
+}
+
+// ─── RETRO INTRO ───────────────────────────────────────────────
+let _rActx = null, _rMusicOn = true, _rTimer = null;
+
+const _RN = {
+  B2:123.47, D3:146.83, E3:164.81, G3:196.00, A3:220.00, B3:246.94,
+  D4:293.66, E4:329.63, G4:392.00, A4:440.00, B4:493.88, D5:587.33, E5:659.25,
+};
+const _RB = 60 / 130; // beat at 130 BPM
+
+const _MELODY = [
+  [_RN.E4,.5],[_RN.G4,.25],[_RN.A4,.25],[_RN.B4,.5],[_RN.A4,.25],[_RN.G4,.25],
+  [_RN.E4,.5],[_RN.G4,.5],[_RN.A4,1],
+  [_RN.A4,.5],[_RN.B4,.25],[_RN.D5,.25],[_RN.E5,.5],[_RN.D5,.25],[_RN.B4,.25],
+  [_RN.A4,.5],[_RN.G4,.5],[_RN.E4,1],
+  [_RN.B4,.5],[_RN.D5,.5],[_RN.E5,.5],[_RN.D5,.5],
+  [_RN.B4,.5],[_RN.A4,.5],[_RN.G4,1],
+  [_RN.D5,.5],[_RN.B4,.25],[_RN.A4,.25],[_RN.G4,.5],[_RN.E4,.5],
+  [_RN.A4,.5],[_RN.B4,.5],[_RN.E4,1],
+];
+const _BASS = [
+  [_RN.E3,.5],[0,.25],[_RN.E3,.25],[_RN.E3,.5],[_RN.B2,.5],
+  [_RN.A3,.5],[0,.25],[_RN.A3,.25],[_RN.B3,.5],[_RN.B3,.5],
+  [_RN.E3,.5],[0,.25],[_RN.E3,.25],[_RN.E3,.5],[_RN.B2,.5],
+  [_RN.A3,.5],[0,.25],[_RN.A3,.25],[_RN.B3,.5],[_RN.B3,.5],
+  [_RN.E3,.5],[0,.25],[_RN.E3,.25],[_RN.G3,.5],[_RN.G3,.5],
+  [_RN.D3,.5],[0,.25],[_RN.D3,.25],[_RN.A3,.5],[_RN.A3,.5],
+  [_RN.E3,.5],[0,.25],[_RN.E3,.25],[_RN.B2,.5],[_RN.B2,.5],
+  [_RN.A3,.25],[_RN.B3,.25],[_RN.E3,.5],[_RN.E3,1],
+];
+
+function _rNote(ctx, freq, t, dur, type, gain) {
+  if (!freq) return;
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = type; o.frequency.value = freq;
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(gain, t + 0.012);
+  g.gain.setValueAtTime(gain, t + dur * 0.78);
+  g.gain.linearRampToValueAtTime(0, t + dur);
+  o.connect(g); g.connect(ctx.destination);
+  o.start(t); o.stop(t + dur + 0.02);
+}
+
+function _rLoop(startTime) {
+  if (!_rMusicOn || !_rActx) return;
+  const ctx = _rActx;
+  let t = startTime, bt = startTime;
+  _MELODY.forEach(([f, b]) => { _rNote(ctx, f, t, b*_RB*0.88, 'square', 0.11); t += b*_RB; });
+  _BASS.forEach(([f, b]) => { _rNote(ctx, f, bt, b*_RB*0.72, 'triangle', 0.18); bt += b*_RB; });
+  // hi-hat every half beat
+  const total = _MELODY.reduce((s,[,b])=>s+b,0);
+  for (let i = 0; i < total*2; i++) _rNote(ctx, i%2?880:660, startTime+i*_RB*0.5, 0.04, 'sine', 0.035);
+  _rTimer = setTimeout(() => _rLoop(startTime + total*_RB), (total*_RB - 0.15)*1000);
+}
+
+function _rStartMusic() {
+  if (!_rActx) _rActx = new (window.AudioContext||window.webkitAudioContext)();
+  if (_rActx.state === 'suspended') _rActx.resume();
+  _rMusicOn = true;
+  _rLoop(_rActx.currentTime + 0.05);
+}
+
+function retroToggleMusic() {
+  const btn = document.getElementById('ri-music-btn');
+  if (_rMusicOn) {
+    _rMusicOn = false;
+    if (_rTimer) clearTimeout(_rTimer);
+    btn.textContent = '♫ מוזיקה: OFF';
+  } else {
+    _rStartMusic();
+    btn.textContent = '♫ מוזיקה: ON';
+  }
+}
+
+function _retroHide() {
+  _rStartMusic();
+  const el = document.getElementById('retro-intro');
+  el.style.opacity = '0';
+  el.style.transition = 'opacity 0.4s';
+  setTimeout(() => el.style.display = 'none', 400);
+}
+
+function retroStart() { _retroHide(); startEpisode(1); }
+
+function retroLevel() {
+  _retroHide();
+  const intro = document.getElementById('intro-screen');
+  intro.style.display = 'flex';
+  intro.style.animation = 'none';
+  intro.style.opacity = '1';
+  intro.style.pointerEvents = 'auto';
+  intro.classList.remove('hidden');
+}
+
+function retroExit(el) {
+  _rStartMusic();
+  el.textContent = '!אין בריחה מהוועד';
+  setTimeout(() => { el.textContent = '✕ יציאה'; }, 2200);
 }
 
 // ─── INIT ──────────────────────────────────────────────────────
