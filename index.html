@@ -1255,8 +1255,10 @@ function _rStartMusic() {
 function retroToggleMusic() {
   const btn = document.getElementById('ri-music-btn');
   if (_rMusicOn) {
+    // Kill all scheduled audio immediately
     _rMusicOn = false;
     if (_rTimer) clearTimeout(_rTimer);
+    if (_rActx) { _rActx.close().catch(()=>{}); _rActx = null; }
     btn.textContent = '♫ מוזיקה: OFF';
   } else {
     _rStartMusic();
@@ -1291,9 +1293,11 @@ function goBackToIntro() {
   const press = ri.querySelector('.ri-press');
   if (menu) menu.classList.add('visible');
   if (press) press.style.display = 'none';
-  // Start music
+  // Start music (stop any existing first)
+  _retroStopMusic();
   _rMusicOn = true;
   _rStartMusic();
+  document.getElementById('ri-music-btn').textContent = '♫ מוזיקה: ON';
 }
 
 function retroLevel() {
