@@ -684,7 +684,7 @@ body {
 
 <!-- HEADER (WhatsApp style) -->
 <div id="header">
-  <div id="header-back">→</div>
+  <div id="header-back" onclick="goBackToIntro()">→</div>
   <div id="header-avatar">🏠</div>
   <div id="header-info">
     <div id="header-title">ועד הבניין | רח' הפרחים 12</div>
@@ -1187,6 +1187,7 @@ function startEpisode(id) {
   intro.classList.add('hidden');
   setTimeout(() => { intro.style.display = 'none'; }, 600);
 
+  document.getElementById('main').style.display = 'flex';
   loadEpisode(episode);
 }
 
@@ -1277,6 +1278,23 @@ function _retroStopMusic() {
 }
 
 function retroStart() { _retroStopMusic(); _retroHide(); startEpisode(1); }
+
+function goBackToIntro() {
+  // Hide game UI
+  document.getElementById('main').style.display = 'none';
+  // Show retro intro
+  const ri = document.getElementById('retro-intro');
+  ri.style.display = 'flex';
+  ri.style.opacity = '1';
+  // Show menu (already unlocked before)
+  const menu = ri.querySelector('.ri-menu');
+  const press = ri.querySelector('.ri-press');
+  if (menu) menu.classList.add('visible');
+  if (press) press.style.display = 'none';
+  // Start music
+  _rMusicOn = true;
+  _rStartMusic();
+}
 
 function retroLevel() {
   _retroStopMusic();
