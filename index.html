@@ -1261,7 +1261,6 @@ function retroToggleMusic() {
 }
 
 function _retroHide() {
-  _rStartMusic();
   const el = document.getElementById('retro-intro');
   el.style.opacity = '0';
   el.style.transition = 'opacity 0.4s';
@@ -1271,13 +1270,14 @@ function _retroHide() {
 function _retroStopMusic() {
   _rMusicOn = false;
   if (_rTimer) clearTimeout(_rTimer);
+  if (_rActx) { _rActx.close().catch(()=>{}); _rActx = null; }
 }
 
-function retroStart() { _retroHide(); setTimeout(_retroStopMusic, 1200); startEpisode(1); }
+function retroStart() { _retroStopMusic(); _retroHide(); startEpisode(1); }
 
 function retroLevel() {
+  _retroStopMusic();
   _retroHide();
-  setTimeout(_retroStopMusic, 1200);
   const intro = document.getElementById('intro-screen');
   intro.style.display = 'flex';
   intro.style.animation = 'none';
@@ -1287,7 +1287,6 @@ function retroLevel() {
 }
 
 function retroExit(el) {
-  _rStartMusic();
   el.textContent = '!אין בריחה מהוועד';
   setTimeout(() => { el.textContent = '✕ יציאה'; }, 2200);
 }
@@ -1295,6 +1294,11 @@ function retroExit(el) {
 // ─── INIT ──────────────────────────────────────────────────────
 buildEpisodeCards();
 renderSidebar();
+
+// Start music on first interaction with retro intro (browser autoplay policy)
+document.getElementById('retro-intro').addEventListener('click', function() {
+  if (_rMusicOn && !_rActx) _rStartMusic();
+}, { once: true });
 </script>
 </body>
 </html>
