@@ -208,7 +208,7 @@ function buildEpisodeCards() {
         <div class="ep-card-sub">${ep.subtitle}</div>
         ${locked
           ? '<div class="ep-play-hint" style="color:#8696a0">🔒 השלם פרק קודם</div>'
-          : `<div class="ep-play-hint">${completed ? '🔄 שחק שוב' : '▶ שחק עכשיו'}</div>`
+          : `<div class="ep-play-hint">${completed ? '🔄 שחק שוב' : '◀ שחק עכשיו'}</div>`
         }
       </div>
     `;
