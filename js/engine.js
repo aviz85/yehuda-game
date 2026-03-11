@@ -201,6 +201,17 @@ function startEpisode(id) {
   loadEpisode(episode);
 }
 
+// ── Go to next episode ────────────────────────────────────────────
+function nextEpisode() {
+  if (!currentEpisode) return;
+  const nextId = currentEpisode.id + 1;
+  const nextEp = EPISODES.find(e => e.id === nextId);
+  if (!nextEp || !GameState.isUnlocked(nextId)) return;
+  document.getElementById('end-screen').classList.remove('on');
+  document.getElementById('main').style.display = 'flex';
+  loadEpisode(nextEp);
+}
+
 // ── Replay current episode ────────────────────────────────────────
 function replayEpisode() {
   document.getElementById('end-screen').classList.remove('on');

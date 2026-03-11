@@ -176,6 +176,12 @@ function showEnd(endingData, activeChars, scores) {
       `;
     }).join('');
 
+  // Show/hide "next episode" button
+  const nextBtn = document.getElementById('next-ep-btn');
+  const nextId = currentEpisode ? currentEpisode.id + 1 : null;
+  const hasNext = nextId && EPISODES.find(e => e.id === nextId);
+  nextBtn.style.display = hasNext ? 'inline-block' : 'none';
+
   document.getElementById('end-screen').classList.add('on');
   GameAudio.beep(660, 0.3);
   setTimeout(() => {

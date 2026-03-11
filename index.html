@@ -534,7 +534,7 @@ body {
 
 /* End screen buttons row */
 #end-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-#replay-btn, #ep-select-btn {
+#next-ep-btn, #replay-btn, #ep-select-btn {
   border: none;
   border-radius: 26px;
   padding: 13px 28px;
@@ -544,6 +544,14 @@ body {
   font-family: inherit;
   transition: all 0.2s;
 }
+#next-ep-btn {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #1a1a2e;
+  box-shadow: 0 3px 16px rgba(255,215,0,0.4);
+  font-size: 16px;
+  padding: 14px 32px;
+}
+#next-ep-btn:hover { transform: scale(1.06); box-shadow: 0 4px 20px rgba(255,215,0,0.6); }
 #replay-btn {
   background: #00a884;
   color: #fff;
@@ -763,6 +771,7 @@ body {
     </div>
     <div id="end-meters"></div>
     <div id="end-btns">
+      <button id="next-ep-btn" onclick="nextEpisode()">לפרק הבא ▶</button>
       <button id="replay-btn" onclick="replayEpisode()">שחק שוב 🔄</button>
       <button id="ep-select-btn" onclick="showEpisodeSelect()">בחר פרק 🏠</button>
     </div>
