@@ -18,6 +18,28 @@ const GameAudio = (() => {
     } catch(e) {}
   }
 
+  // WhatsApp-style two-tone pop notification
+  function waNotif() {
+    try {
+      if (!_sfxCtx) _sfxCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const t = _sfxCtx.currentTime;
+      // First pop (lower)
+      const o1 = _sfxCtx.createOscillator(), g1 = _sfxCtx.createGain();
+      o1.type = 'sine'; o1.frequency.value = 600;
+      g1.gain.setValueAtTime(0.15, t);
+      g1.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+      o1.connect(g1); g1.connect(_sfxCtx.destination);
+      o1.start(t); o1.stop(t + 0.08);
+      // Second pop (higher) after tiny gap
+      const o2 = _sfxCtx.createOscillator(), g2 = _sfxCtx.createGain();
+      o2.type = 'sine'; o2.frequency.value = 900;
+      g2.gain.setValueAtTime(0.12, t + 0.1);
+      g2.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+      o2.connect(g2); g2.connect(_sfxCtx.destination);
+      o2.start(t + 0.1); o2.stop(t + 0.18);
+    } catch(e) {}
+  }
+
   // ── RETRO MUSIC ───────────────────────────────────────────────
   const RN = {
     B2:123.47, D3:146.83, E3:164.81, G3:196.00, A3:220.00, B3:246.94,
@@ -87,5 +109,5 @@ const GameAudio = (() => {
 
   function isMusicOn() { return _musicOn; }
 
-  return { beep, startMusic, stopMusic, isMusicOn };
+  return { beep, waNotif, startMusic, stopMusic, isMusicOn };
 })();

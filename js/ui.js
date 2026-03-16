@@ -75,7 +75,7 @@ function addMsg(opts) {
   `;
   chat.appendChild(wrap);
   chat.scrollTop = chat.scrollHeight;
-  if (!isPlayer) GameAudio.beep(780 + Math.random() * 120, 0.1);
+  if (!isPlayer) GameAudio.waNotif();
 }
 
 // System / narrative message (centered pill)

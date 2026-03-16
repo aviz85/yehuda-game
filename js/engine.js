@@ -39,11 +39,14 @@ function qMsg(charId, text, typingMs, pauseMs, isEmoji) {
   enq((done) => {
     const c = CHARACTERS[charId];
     showTyping(c.name);
+    // Longer typing + pause so players have time to read each message
+    const actualTyping = Math.max(typingMs || 1200, 1400);
+    const actualPause  = Math.max(pauseMs  || 250,  600);
     setTimeout(() => {
       hideTyping();
       addMsg({ charId, text, isEmoji: !!isEmoji });
-      setTimeout(done, pauseMs || 250);
-    }, typingMs || 1200);
+      setTimeout(done, actualPause);
+    }, actualTyping);
   });
 }
 
